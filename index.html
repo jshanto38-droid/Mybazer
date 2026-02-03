@@ -1,83 +1,2041 @@
 
-<!DOCTYPE html>
+Ami to tomaky <!DOCTYPE html>
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>বাজার হিসাব প্রো - ক্লাউড</title>
+    <title>বাজার হিসাব - মাসিক বাজেট ট্র্যাকার</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
     <style>
-        :root {
-            --primary-color: #2E7D32;
-            --secondary-color: #4CAF50;
-            --bg-color: #F1F8E9;
-            --card-bg: #FFFFFF;
-            --text-color: #1B5E20;
-            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: var(--shadow); }
-        h2 { text-align: center; color: var(--primary-color); margin-bottom: 25px; font-size: 28px; }
-        .input-group { margin-bottom: 15px; }
-        input { width: 100%; padding: 12px; border: 2px solid #C8E6C9; border-radius: 10px; font-size: 16px; box-sizing: border-box; transition: 0.3s; }
-        input:focus { border-color: var(--secondary-color); outline: none; }
-        button { width: 100%; padding: 12px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        button:hover { background: var(--secondary-color); transform: translateY(-2px); }
-        .summary { background: #E8F5E9; padding: 15px; border-radius: 12px; margin: 20px 0; display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; border: 1px solid #C8E6C9; }
-        ul { list-style: none; padding: 0; }
-        li { background: #FAFAFA; padding: 12px; margin-bottom: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--primary-color); animation: fadeIn 0.4s ease; }
-        .delete-btn { color: #d32f2f; cursor: pointer; padding: 5px 10px; transition: 0.2s; }
-        .delete-btn:hover { background: #ffebee; border-radius: 5px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        :root {
+            --primary: #2E7D32;
+            --primary-light: #4CAF50;
+            --primary-dark: #1B5E20;
+            --secondary: #FF9800;
+            --light: #F5F5F5;
+            --dark: #333333;
+            --gray: #757575;
+            --light-gray: #E0E0E0;
+            --white: #FFFFFF;
+            --danger: #F44336;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            direction: ltr;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 15px 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            font-size: 1.8rem;
+        }
+        
+        .date-display {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Navigation Styles */
+        nav {
+            background-color: var(--white);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 70px;
+            z-index: 99;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            overflow-x: auto;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+        
+        .nav-links::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-links li {
+            flex-shrink: 0;
+        }
+        
+        .nav-links a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--gray);
+            font-weight: 500;
+            border-radius: 20px;
+            margin-right: 5px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .nav-links a.active {
+            background-color: var(--primary-light);
+            color: var(--white);
+        }
+        
+        .nav-links a i {
+            margin-right: 5px;
+        }
+        
+        /* Main Content */
+        main {
+            padding: 20px 0 80px 0;
+            min-height: calc(100vh - 180px);
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .page-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .page-title i {
+            color: var(--primary);
+        }
+        
+        /* Card Styles */
+        .card {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            gap: 8px;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #F57C00;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: var(--white);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-light);
+            color: var(--white);
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+        
+        .btn-icon {
+            padding: 8px 12px;
+            min-width: 40px;
+        }
+        
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .input-group .form-control {
+            flex: 1;
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .table th {
+            background-color: var(--primary-light);
+            color: var(--white);
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .table .actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: var(--white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .summary-card.orange {
+            background: linear-gradient(135deg, var(--warning), #FF5722);
+        }
+        
+        .summary-card.green {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+        }
+        
+        .summary-card.red {
+            background: linear-gradient(135deg, #F44336, #D32F2F);
+        }
+        
+        .summary-card-title {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .summary-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .modal-footer {
+            padding: 15px 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        /* Shopping Items Grid */
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .item-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .item-card.selected {
+            border-color: var(--primary);
+            background-color: rgba(46, 125, 50, 0.05);
+        }
+        
+        .item-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        /* No Data Message */
+        .no-data {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .no-data i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .no-data p {
+            font-size: 1.1rem;
+        }
+        
+        /* Footer Navigation */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--white);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            z-index: 100;
+        }
+        
+        .footer-nav-links {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
+        
+        .footer-nav-links a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--gray);
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-nav-links a.active {
+            color: var(--primary);
+        }
+        
+        .footer-nav-links i {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 750px;
+                padding: 0 15px;
+            }
+            
+            .nav-links {
+                justify-content: center;
+            }
+            
+            .items-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                max-width: 970px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1140px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2><i class="fas fa-shopping-basket"></i> বাজার হিসাব</h2>
-        <div class="input-group">
-            <input type="text" id="itemName" placeholder="পণ্যের নাম (যেমন: চাল)">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">🛒</div>
+                    <h1>বাজার হিসাব</h1>
+                </div>
+                <div class="date-display" id="currentDate">...</div>
+            </div>
         </div>
-        <div class="input-group">
-            <input type="number" id="itemPrice" placeholder="দাম (যেমন: ১০০)">
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#dashboard" class="active"><i class="fas fa-home"></i> ড্যাশবোর্ড</a></li>
+                <li><a href="#new-shopping"><i class="fas fa-cart-plus"></i> নতুন বাজার</a></li>
+                <li><a href="#shopping-list"><i class="fas fa-list"></i> বাজার তালিকা</a></li>
+                <li><a href="#products"><i class="fas fa-shopping-basket"></i> পণ্য পরিচালনা</a></li>
+                <li><a href="#reports"><i class="fas fa-chart-bar"></i> রিপোর্ট</a></li>
+            </ul>
         </div>
-        <button onclick="addItem()"><i class="fas fa-plus-circle"></i> যোগ করুন</button>
-        <div class="summary">
-            <span>মোট খরচ:</span>
-            <span id="totalCost">০</span> <span>টাকা</span>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Dashboard Page -->
+        <section id="dashboard-page" class="page active">
+            <h2 class="page-title"><i class="fas fa-home"></i> ড্যাশবোর্ড</h2>
+            
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-card-title">আজকের বাজার খরচ</div>
+                    <div class="summary-card-value" id="todayCost">০ টাকা</div>
+                </div>
+                <div class="summary-card orange">
+                    <div class="summary-card-title">এই মাসের মোট খরচ</div>
+                    <div class="summary-card-value" id="monthCost">০ টাকা</div>
+                </div>
+                <div class="summary-card green">
+                    <div class="summary-card-title">মোট বাজার সংখ্যা</div>
+                    <div class="summary-card-value" id="totalShopping">০</div>
+                </div>
+                <div class="summary-card red">
+                    <div class="summary-card-title">সর্বোচ্চ খরচ</div>
+                    <div class="summary-card-value" id="maxCost">০ টাকা</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">সাম্প্রতিক বাজারসমূহ</h3>
+                    <a href="#new-shopping" class="btn btn-primary btn-small">নতুন বাজার <i class="fas fa-plus"></i></a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table" id="recentShoppingTable">
+                        <thead>
+                            <tr>
+                                <th>তারিখ</th>
+                                <th>মোট পণ্য</th>
+                                <th>মোট খরচ</th>
+                                <th>কার্যক্রম</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentShoppingBody">
+                            <!-- Recent shopping data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="no-data" id="noRecentData" style="display: none;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>কোনো বাজার করা হয়নি। প্রথম বাজার যোগ করুন!</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">সর্বাধিক কেনা পণ্য</h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table" id="topProductsTable">
+                        <thead>
+                            <tr>
+                                <th>পণ্যের নাম</th>
+                                <th>মোট পরিমাণ</th>
+                                <th>মোট খরচ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topProductsBody">
+                            <!-- Top products data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="no-data" id="noProductsData" style="display: none;">
+                    <i class="fas fa-apple-alt"></i>
+                    <p>কোনো পণ্য কেনা হয়নি।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Shopping Page -->
+        <section id="new-shopping-page" class="page">
+            <h2 class="page-title"><i class="fas fa-cart-plus"></i> নতুন বাজার যোগ করুন</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">বাজার তথ্য</h3>
+                </div>
+                <div class="card-body">
+                    <form id="shoppingForm">
+                        <div class="form-group">
+                            <label class="form-label" for="shoppingDate">তারিখ</label>
+                            <input type="date" id="shoppingDate" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="shoppingName">বাজারের নাম (ঐচ্ছিক)</label>
+                            <input type="text" id="shoppingName" class="form-control" placeholder="যেমন: সাপ্তাহিক বাজার, মাসিক বাজার ইত্যাদি">
+                        </div>
+                        
+                        <div class="card-header" style="padding: 0; margin: 20px 0 15px 0;">
+                            <h3 class="card-title">পণ্য তালিকা</h3>
+                            <button type="button" class="btn btn-primary btn-small" id="addProductBtn">
+                                <i class="fas fa-plus"></i> পণ্য যোগ
+                            </button>
+                        </div>
+                        
+                        <div id="productsContainer">
+                            <!-- Product rows will be added here dynamically -->
+                        </div>
+                        
+                        <div class="form-group" style="text-align: center; margin-top: 30px;">
+                            <button type="submit" class="btn btn-primary" style="padding: 12px 30px; font-size: 1.1rem;">
+                                <i class="fas fa-save"></i> বাজার সেভ করুন
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shopping List Page -->
+        <section id="shopping-list-page" class="page">
+            <h2 class="page-title"><i class="fas fa-list"></i> বাজার তালিকা</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">সকল বাজারের তালিকা</h3>
+                    <div class="input-group" style="max-width: 300px;">
+                        <input type="month" id="monthFilter" class="form-control" style="flex: 1;">
+                        <button class="btn btn-outline btn-small" id="filterBtn">
+                            <i class="fas fa-filter"></i> ফিল্টার
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table" id="allShoppingTable">
+                        <thead>
+                            <tr>
+                                <th>তারিখ</th>
+                                <th>বাজারের নাম</th>
+                                <th>পণ্য সংখ্যা</th>
+                                <th>মোট খরচ</th>
+                                <th>কার্যক্রম</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allShoppingBody">
+                            <!-- All shopping data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="no-data" id="noAllShoppingData" style="display: none;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>কোনো বাজার করা হয়নি। প্রথম বাজার যোগ করুন!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Management Page -->
+        <section id="products-page" class="page">
+            <h2 class="page-title"><i class="fas fa-shopping-basket"></i> পণ্য পরিচালনা</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">ডিফল্ট পণ্য তালিকা</h3>
+                    <button class="btn btn-primary btn-small" id="addNewProductBtn">
+                        <i class="fas fa-plus"></i> নতুন পণ্য
+                    </button>
+                </div>
+                
+                <div class="items-grid" id="productsGrid">
+                    <!-- Product items will be loaded here dynamically -->
+                </div>
+                
+                <div class="no-data" id="noProductsList" style="display: none;">
+                    <i class="fas fa-apple-alt"></i>
+                    <p>কোনো পণ্য নেই। নতুন পণ্য যোগ করুন!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reports Page -->
+        <section id="reports-page" class="page">
+            <h2 class="page-title"><i class="fas fa-chart-bar"></i> মাসিক রিপোর্ট</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">মাস নির্বাচন করুন</h3>
+                    <div class="input-group" style="max-width: 300px;">
+                        <input type="month" id="reportMonth" class="form-control" style="flex: 1;">
+                        <button class="btn btn-primary btn-small" id="generateReportBtn">
+                            <i class="fas fa-chart-line"></i> রিপোর্ট দেখুন
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="reportContent" style="display: none;">
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <div class="summary-card-title">মোট বাজার সংখ্যা</div>
+                            <div class="summary-card-value" id="reportTotalShopping">০</div>
+                        </div>
+                        <div class="summary-card orange">
+                            <div class="summary-card-title">মোট খরচ</div>
+                            <div class="summary-card-value" id="reportTotalCost">০ টাকা</div>
+                        </div>
+                        <div class="summary-card green">
+                            <div class="summary-card-title">গড় দৈনিক খরচ</div>
+                            <div class="summary-card-value" id="reportAvgDailyCost">০ টাকা</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card" style="margin-top: 20px;">
+                        <div class="card-header">
+                            <h3 class="card-title">মাসিক পণ্য বিশ্লেষণ</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table" id="reportProductsTable">
+                                <thead>
+                                    <tr>
+                                        <th>পণ্যের নাম</th>
+                                        <th>মোট পরিমাণ</th>
+                                        <th>মোট খরচ</th>
+                                        <th>গড় দাম (প্রতি কেজি)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportProductsBody">
+                                    <!-- Report products data will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="no-data" id="noReportData" style="display: none;">
+                            <i class="fas fa-chart-pie"></i>
+                            <p>এই মাসে কোনো বাজার করা হয়নি।</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="no-data" id="selectMonthPrompt">
+                    <i class="fas fa-calendar-alt"></i>
+                    <p>রিপোর্ট দেখতে মাস নির্বাচন করুন</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Navigation -->
+    <div class="footer-nav">
+        <div class="container">
+            <ul class="footer-nav-links">
+                <li><a href="#dashboard" class="active"><i class="fas fa-home"></i> ড্যাশবোর্ড</a></li>
+                <li><a href="#new-shopping"><i class="fas fa-cart-plus"></i> বাজার</a></li>
+                <li><a href="#shopping-list"><i class="fas fa-list"></i> তালিকা</a></li>
+                <li><a href="#products"><i class="fas fa-shopping-basket"></i> পণ্য</a></li>
+                <li><a href="#reports"><i class="fas fa-chart-bar"></i> রিপোর্ট</a></li>
+            </ul>
         </div>
-        <ul id="itemList"></ul>
     </div>
 
+    <!-- Modals -->
+    
+    <!-- Add New Product Modal -->
+    <div class="modal" id="addProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">নতুন পণ্য যোগ করুন</h3>
+                <button class="modal-close" id="closeProductModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newProductForm">
+                    <div class="form-group">
+                        <label class="form-label" for="productName">পণ্যের নাম</label>
+                        <input type="text" id="productName" class="form-control" placeholder="যেমন: টমেটো, মাছ, মাংস" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="productCategory">পণ্যের ক্যাটেগরি</label>
+                        <select id="productCategory" class="form-control">
+                            <option value="সবজি">সবজি</option>
+                            <option value="মসলা">মসলা</option>
+                            <option value="ডাল">ডাল</option>
+                            <option value="তেল">তেল</option>
+                            <option value="অন্যান্য">অন্যান্য</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="productUnit">ডিফল্ট একক</label>
+                        <select id="productUnit" class="form-control">
+                            <option value="kg">কেজি (kg)</option>
+                            <option value="gm">গ্রাম (gm)</option>
+                            <option value="piece">পিস (piece)</option>
+                            <option value="liter">লিটার (liter)</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelProductBtn">বাতিল</button>
+                <button class="btn btn-primary" id="saveProductBtn">সেভ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Shopping Modal -->
+    <div class="modal" id="editShoppingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">বাজার সম্পাদনা করুন</h3>
+                <button class="modal-close" id="closeEditModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Edit form will be loaded here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- View Shopping Details Modal -->
+    <div class="modal" id="viewShoppingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">বাজার বিবরণ</h3>
+                <button class="modal-close" id="closeViewModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Shopping details will be loaded here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="closeViewBtn">বন্ধ করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
     <script>
-        let total = 0;
-        function addItem() {
-            const nameInput = document.getElementById('itemName');
-            const priceInput = document.getElementById('itemPrice');
-            const list = document.getElementById('itemList');
-            const totalDisplay = document.getElementById('totalCost');
+        // Default products list
+        const defaultProducts = [
+            { id: 1, name: "কাঁচামরিচ", category: "সবজি", unit: "kg" },
+            { id: 2, name: "আলু", category: "সবজি", unit: "kg" },
+            { id: 3, name: "পটল", category: "সবজি", unit: "kg" },
+            { id: 4, name: "ফুলকপি", category: "সবজি", unit: "piece" },
+            { id: 5, name: "উস্তা", category: "সবজি", unit: "kg" },
+            { id: 6, name: "লাউ", category: "সবজি", unit: "kg" },
+            { id: 7, name: "সিম", category: "সবজি", unit: "kg" },
+            { id: 8, name: "বাঁধাকপি", category: "সবজি", unit: "piece" },
+            { id: 9, name: "মিষ্টি কুমড়া", category: "সবজি", unit: "kg" },
+            { id: 10, name: "মুলা", category: "সবজি", unit: "kg" },
+            { id: 11, name: "পেঁপে", category: "সবজি", unit: "kg" },
+            { id: 12, name: "শাকসবজি", category: "সবজি", unit: "kg" },
+            { id: 13, name: "রসুন", category: "মসলা", unit: "kg" },
+            { id: 14, name: "পেঁয়াজ", category: "মসলা", unit: "kg" },
+            { id: 15, name: "আদা", category: "মসলা", unit: "kg" },
+            { id: 16, name: "জিরা", category: "মসলা", unit: "gm" },
+            { id: 17, name: "গরম মসলা", category: "মসলা", unit: "gm" },
+            { id: 18, name: "হলুদের গুঁড়া", category: "মসলা", unit: "gm" },
+            { id: 19, name: "মরিচের গুঁড়া", category: "মসলা", unit: "gm" },
+            { id: 20, name: "সজের গুঁড়া", category: "মসলা", unit: "gm" },
+            { id: 21, name: "মুরগির মসলা", category: "মসলা", unit: "gm" },
+            { id: 22, name: "গরুর মসলা", category: "মসলা", unit: "gm" },
+            { id: 23, name: "ডাল (মসুর)", category: "ডাল", unit: "kg" },
+            { id: 24, name: "ডাল (বুট)", category: "ডাল", unit: "kg" },
+            { id: 25, name: "ডাল (মুগ)", category: "ডাল", unit: "kg" },
+            { id: 26, name: "ডাল (কালার)", category: "ডাল", unit: "kg" },
+            { id: 27, name: "সোয়াবিন তেল", category: "তেল", unit: "liter" },
+            { id: 28, name: "সরিষার তেল", category: "তেল", unit: "liter" },
+            { id: 29, name: "ডিম", category: "অন্যান্য", unit: "piece" },
+            { id: 30, name: "ভীম সাবান", category: "অন্যান্য", unit: "piece" },
+            { id: 31, name: "হ্যান্ডওয়াশ", category: "অন্যান্য", unit: "piece" }
+        ];
 
-            if (nameInput.value === '' || priceInput.value === '') {
-                alert('দয়া করে নাম এবং দাম দুটিই লিখুন!');
-                return;
-            }
+        // Initialize data
+        let products = JSON.parse(localStorage.getItem('marketProducts')) || defaultProducts;
+        let shoppingList = JSON.parse(localStorage.getItem('marketShoppingList')) || [];
+        let currentShoppingId = null;
+        let productCounter = products.length > 0 ? Math.max(...products.map(p => p.id)) : 31;
 
-            const price = parseFloat(priceInput.value);
-            const li = document.createElement('li');
-            li.innerHTML = `<span>${nameInput.value}</span> <span>${price} টাকা <i class="fas fa-trash-alt delete-btn" onclick="removeItem(this, ${price})"></i></span>`;
-            list.appendChild(li);
+        // DOM Elements
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const footerNavLinks = document.querySelectorAll('.footer-nav-links a');
+        const currentDateElement = document.getElementById('currentDate');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const productsContainer = document.getElementById('productsContainer');
+        const shoppingForm = document.getElementById('shoppingForm');
+        const shoppingDate = document.getElementById('shoppingDate');
+        const addNewProductBtn = document.getElementById('addNewProductBtn');
+        const addProductModal = document.getElementById('addProductModal');
+        const closeProductModal = document.getElementById('closeProductModal');
+        const cancelProductBtn = document.getElementById('cancelProductBtn');
+        const saveProductBtn = document.getElementById('saveProductBtn');
+        const newProductForm = document.getElementById('newProductForm');
+        const productsGrid = document.getElementById('productsGrid');
+        const editShoppingModal = document.getElementById('editShoppingModal');
+        const closeEditModal = document.getElementById('closeEditModal');
+        const viewShoppingModal = document.getElementById('viewShoppingModal');
+        const closeViewModal = document.getElementById('closeViewModal');
+        const closeViewBtn = document.getElementById('closeViewBtn');
+        const monthFilter = document.getElementById('monthFilter');
+        const filterBtn = document.getElementById('filterBtn');
+        const reportMonth = document.getElementById('reportMonth');
+        const generateReportBtn = document.getElementById('generateReportBtn');
+        const reportContent = document.getElementById('reportContent');
+        const selectMonthPrompt = document.getElementById('selectMonthPrompt');
 
-            total += price;
-            totalDisplay.innerText = total;
-
-            nameInput.value = '';
-            priceInput.value = '';
+        // Initialize the app
+        function initApp() {
+            // Set current date
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            currentDateElement.textContent = today.toLocaleDateString('bn-BD', options);
+            
+            // Set default date in shopping form to today
+            shoppingDate.valueAsDate = today;
+            
+            // Set default month in filter to current month
+            const currentMonth = today.toISOString().slice(0, 7);
+            monthFilter.value = currentMonth;
+            reportMonth.value = currentMonth;
+            
+            // Initialize product rows
+            addProductRow();
+            
+            // Load products grid
+            loadProductsGrid();
+            
+            // Load dashboard data
+            loadDashboardData();
+            
+            // Load shopping list
+            loadShoppingList();
+            
+            // Initialize event listeners
+            initEventListeners();
         }
 
-        function removeItem(element, price) {
-            element.parentElement.parentElement.remove();
-            total -= price;
-            document.getElementById('totalCost').innerText = total;
+        // Initialize event listeners
+        function initEventListeners() {
+            // Navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('href').substring(1);
+                    
+                    // Update active states
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    footerNavLinks.forEach(l => {
+                        if (l.getAttribute('href') === this.getAttribute('href')) {
+                            l.classList.add('active');
+                        } else {
+                            l.classList.remove('active');
+                        }
+                    });
+                    
+                    // Show target page
+                    pages.forEach(page => {
+                        if (page.id === `${target}-page`) {
+                            page.classList.add('active');
+                        } else {
+                            page.classList.remove('active');
+                        }
+                    });
+                });
+            });
+            
+            // Footer navigation links
+            footerNavLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('href').substring(1);
+                    
+                    // Update active states
+                    footerNavLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    navLinks.forEach(l => {
+                        if (l.getAttribute('href') === this.getAttribute('href')) {
+                            l.classList.add('active');
+                        } else {
+                            l.classList.remove('active');
+                        }
+                    });
+                    
+                    // Show target page
+                    pages.forEach(page => {
+                        if (page.id === `${target}-page`) {
+                            page.classList.add('active');
+                        } else {
+                            page.classList.remove('active');
+                        }
+                    });
+                });
+            });
+            
+            // Add product row button
+            addProductBtn.addEventListener('click', addProductRow);
+            
+            // Shopping form submission
+            shoppingForm.addEventListener('submit', saveShopping);
+            
+            // Add new product button
+            addNewProductBtn.addEventListener('click', () => {
+                addProductModal.classList.add('active');
+            });
+            
+            // Close product modal buttons
+            closeProductModal.addEventListener('click', () => {
+                addProductModal.classList.remove('active');
+                newProductForm.reset();
+            });
+            
+            cancelProductBtn.addEventListener('click', () => {
+                addProductModal.classList.remove('active');
+                newProductForm.reset();
+            });
+            
+            // Save product button
+            saveProductBtn.addEventListener('click', saveNewProduct);
+            
+            // Close edit modal
+            closeEditModal.addEventListener('click', () => {
+                editShoppingModal.classList.remove('active');
+            });
+            
+            // Close view modal
+            closeViewModal.addEventListener('click', () => {
+                viewShoppingModal.classList.remove('active');
+            });
+            
+            closeViewBtn.addEventListener('click', () => {
+                viewShoppingModal.classList.remove('active');
+            });
+            
+            // Filter button
+            filterBtn.addEventListener('click', loadShoppingList);
+            
+            // Generate report button
+            generateReportBtn.addEventListener('click', generateReport);
+        }
+
+        // Add product row to shopping form
+        function addProductRow() {
+            const row = document.createElement('div');
+            row.className = 'product-row';
+            row.innerHTML = `
+                <div class="form-group" style="display: flex; gap: 10px; align-items: flex-end;">
+                    <div style="flex: 2;">
+                        <label class="form-label">পণ্যের নাম</label>
+                        <select class="form-control product-select" required>
+                            <option value="">পণ্য নির্বাচন করুন</option>
+                            ${products.map(product => `<option value="${product.id}">${product.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="form-label">পরিমাণ</label>
+                        <input type="number" class="form-control quantity" step="0.01" min="0" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="form-label">একক</label>
+                        <select class="form-control unit">
+                            <option value="kg">কেজি</option>
+                            <option value="gm">গ্রাম</option>
+                            <option value="piece">পিস</option>
+                            <option value="liter">লিটার</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1.5;">
+                        <label class="form-label">মোট দাম (টাকা)</label>
+                        <input type="number" class="form-control price" min="0" required>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <button type="button" class="btn btn-danger btn-icon remove-product-btn" style="padding: 10px;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            productsContainer.appendChild(row);
+            
+            // Add event listener to remove button
+            const removeBtn = row.querySelector('.remove-product-btn');
+            removeBtn.addEventListener('click', function() {
+                if (document.querySelectorAll('.product-row').length > 1) {
+                    row.remove();
+                } else {
+                    alert('অন্তত একটি পণ্য যোগ করা আবশ্যক!');
+                }
+            });
+            
+            // Add event listener to product select to update unit
+            const productSelect = row.querySelector('.product-select');
+            const unitSelect = row.querySelector('.unit');
+            
+            productSelect.addEventListener('change', function() {
+                const productId = parseInt(this.value);
+                if (productId) {
+                    const product = products.find(p => p.id === productId);
+                    if (product) {
+                        // Set the unit based on product's default unit
+                        unitSelect.value = product.unit;
+                    }
+                }
+            });
+        }
+
+        // Save new shopping
+        function saveShopping(e) {
+            e.preventDefault();
+            
+            // Get shopping data
+            const date = shoppingDate.value;
+            const name = document.getElementById('shoppingName').value || `বাজার - ${new Date(date).toLocaleDateString('bn-BD')}`;
+            
+            // Get product rows
+            const productRows = document.querySelectorAll('.product-row');
+            const items = [];
+            let totalCost = 0;
+            
+            for (const row of productRows) {
+                const productSelect = row.querySelector('.product-select');
+                const quantityInput = row.querySelector('.quantity');
+                const unitSelect = row.querySelector('.unit');
+                const priceInput = row.querySelector('.price');
+                
+                const productId = parseInt(productSelect.value);
+                const product = products.find(p => p.id === productId);
+                
+                if (!product) {
+                    alert('দয়া করে সব পণ্য সঠিকভাবে নির্বাচন করুন!');
+                    return;
+                }
+                
+                const quantity = parseFloat(quantityInput.value);
+                const unit = unitSelect.value;
+                const price = parseFloat(priceInput.value);
+                
+                if (!quantity || !price) {
+                    alert('দয়া করে সব পণ্যের পরিমাণ ও দাম সঠিকভাবে লিখুন!');
+                    return;
+                }
+                
+                items.push({
+                    productId,
+                    productName: product.name,
+                    quantity,
+                    unit,
+                    price
+                });
+                
+                totalCost += price;
+            }
+            
+            // Create shopping object
+            const shopping = {
+                id: Date.now(),
+                date,
+                name,
+                items,
+                totalCost
+            };
+            
+            // Add to shopping list
+            shoppingList.unshift(shopping);
+            
+            // Save to localStorage
+            localStorage.setItem('marketShoppingList', JSON.stringify(shoppingList));
+            
+            // Reset form
+            shoppingForm.reset();
+            shoppingDate.valueAsDate = new Date();
+            
+            // Clear product rows and add one fresh row
+            productsContainer.innerHTML = '';
+            addProductRow();
+            
+            // Show success message
+            alert('বাজার সফলভাবে সংরক্ষণ করা হয়েছে!');
+            
+            // Update dashboard and shopping list
+            loadDashboardData();
+            loadShoppingList();
+            
+            // Navigate to dashboard
+            document.querySelector('a[href="#dashboard"]').click();
+        }
+
+        // Load products grid
+        function loadProductsGrid() {
+            productsGrid.innerHTML = '';
+            
+            if (products.length === 0) {
+                document.getElementById('noProductsList').style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('noProductsList').style.display = 'none';
+            
+            // Group products by category
+            const groupedProducts = {};
+            products.forEach(product => {
+                if (!groupedProducts[product.category]) {
+                    groupedProducts[product.category] = [];
+                }
+                groupedProducts[product.category].push(product);
+            });
+            
+            // Create cards for each product
+            for (const category in groupedProducts) {
+                // Add category title
+                const categoryTitle = document.createElement('h3');
+                categoryTitle.textContent = category;
+                categoryTitle.style.margin = '20px 0 10px 0';
+                categoryTitle.style.color = 'var(--primary-dark)';
+                productsGrid.appendChild(categoryTitle);
+                
+                // Add products in this category
+                groupedProducts[category].forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'item-card';
+                    card.dataset.id = product.id;
+                    
+                    // Set icon based on category
+                    let icon = 'fa-apple-alt';
+                    if (category === 'মসলা') icon = 'fa-pepper-hot';
+                    if (category === 'ডাল') icon = 'fa-seedling';
+                    if (category === 'তেল') icon = 'fa-oil-can';
+                    if (category === 'অন্যান্য') icon = 'fa-shopping-basket';
+                    
+                    card.innerHTML = `
+                        <div class="item-icon"><i class="fas ${icon}"></i></div>
+                        <div class="item-name">${product.name}</div>
+                        <div style="font-size: 0.8rem; color: var(--gray); margin-top: 5px;">${product.unit}</div>
+                        <button class="btn btn-danger btn-small delete-product-btn" style="margin-top: 10px; padding: 5px 10px; font-size: 0.8rem;">
+                            <i class="fas fa-trash"></i> মুছুন
+                        </button>
+                    `;
+                    
+                    productsGrid.appendChild(card);
+                    
+                    // Add event listener to delete button
+                    const deleteBtn = card.querySelector('.delete-product-btn');
+                    deleteBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        deleteProduct(product.id);
+                    });
+                });
+            }
+        }
+
+        // Save new product
+        function saveNewProduct() {
+            const name = document.getElementById('productName').value.trim();
+            const category = document.getElementById('productCategory').value;
+            const unit = document.getElementById('productUnit').value;
+            
+            if (!name) {
+                alert('দয়া করে পণ্যের নাম লিখুন!');
+                return;
+            }
+            
+            // Check if product already exists
+            if (products.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+                alert('এই পণ্যটি ইতিমধ্যে তালিকায় আছে!');
+                return;
+            }
+            
+            // Create new product
+            productCounter++;
+            const newProduct = {
+                id: productCounter,
+                name,
+                category,
+                unit
+            };
+            
+            // Add to products array
+            products.push(newProduct);
+            
+            // Save to localStorage
+            localStorage.setItem('marketProducts', JSON.stringify(products));
+            
+            // Close modal and reset form
+            addProductModal.classList.remove('active');
+            newProductForm.reset();
+            
+            // Reload products grid
+            loadProductsGrid();
+            
+            // Show success message
+            alert('পণ্য সফলভাবে যোগ করা হয়েছে!');
+        }
+
+        // Delete product
+        function deleteProduct(id) {
+            if (defaultProducts.some(p => p.id === id)) {
+                alert('ডিফল্ট পণ্য মুছতে পারবেন না! আপনি শুধুমাত্র নিজের যোগ করা পণ্য মুছতে পারবেন।');
+                return;
+            }
+            
+            if (confirm('আপনি কি এই পণ্যটি মুছতে চান?')) {
+                // Remove product from array
+                products = products.filter(p => p.id !== id);
+                
+                // Save to localStorage
+                localStorage.setItem('marketProducts', JSON.stringify(products));
+                
+                // Reload products grid
+                loadProductsGrid();
+                
+                // Show success message
+                alert('পণ্য মুছে ফেলা হয়েছে!');
+            }
+        }
+
+        // Load dashboard data
+        function loadDashboardData() {
+            const today = new Date().toISOString().slice(0, 10);
+            
+            // Calculate today's cost
+            const todayShopping = shoppingList.filter(s => s.date === today);
+            const todayCost = todayShopping.reduce((sum, s) => sum + s.totalCost, 0);
+            document.getElementById('todayCost').textContent = `${todayCost.toFixed(2)} টাকা`;
+            
+            // Calculate this month's cost
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            const monthShopping = shoppingList.filter(s => s.date.startsWith(currentMonth));
+            const monthCost = monthShopping.reduce((sum, s) => sum + s.totalCost, 0);
+            document.getElementById('monthCost').textContent = `${monthCost.toFixed(2)} টাকা`;
+            
+            // Total shopping count
+            document.getElementById('totalShopping').textContent = shoppingList.length;
+            
+            // Max cost
+            const maxCost = shoppingList.length > 0 ? Math.max(...shoppingList.map(s => s.totalCost)) : 0;
+            document.getElementById('maxCost').textContent = `${maxCost.toFixed(2)} টাকা`;
+            
+            // Load recent shopping
+            loadRecentShopping();
+            
+            // Load top products
+            loadTopProducts();
+        }
+
+        // Load recent shopping
+        function loadRecentShopping() {
+            const recentShoppingBody = document.getElementById('recentShoppingBody');
+            const noRecentData = document.getElementById('noRecentData');
+            
+            if (shoppingList.length === 0) {
+                recentShoppingBody.innerHTML = '';
+                document.getElementById('recentShoppingTable').style.display = 'none';
+                noRecentData.style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('recentShoppingTable').style.display = 'table';
+            noRecentData.style.display = 'none';
+            
+            // Get recent 5 shopping
+            const recentShopping = shoppingList.slice(0, 5);
+            
+            recentShoppingBody.innerHTML = recentShopping.map(shopping => `
+                <tr>
+                    <td>${formatDate(shopping.date)}</td>
+                    <td>${shopping.items.length}</td>
+                    <td>${shopping.totalCost.toFixed(2)} টাকা</td>
+                    <td class="actions">
+                        <button class="btn btn-outline btn-small view-shopping-btn" data-id="${shopping.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-outline btn-small edit-shopping-btn" data-id="${shopping.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-small delete-shopping-btn" data-id="${shopping.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Add event listeners to buttons
+            document.querySelectorAll('.view-shopping-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewShopping(parseInt(this.dataset.id));
+                });
+            });
+            
+            document.querySelectorAll('.edit-shopping-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    editShopping(parseInt(this.dataset.id));
+                });
+            });
+            
+            document.querySelectorAll('.delete-shopping-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    deleteShopping(parseInt(this.dataset.id));
+                });
+            });
+        }
+
+        // Load top products
+        function loadTopProducts() {
+            const topProductsBody = document.getElementById('topProductsBody');
+            const noProductsData = document.getElementById('noProductsData');
+            
+            if (shoppingList.length === 0) {
+                topProductsBody.innerHTML = '';
+                document.getElementById('topProductsTable').style.display = 'none';
+                noProductsData.style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('topProductsTable').style.display = 'table';
+            noProductsData.style.display = 'none';
+            
+            // Calculate product totals
+            const productTotals = {};
+            
+            shoppingList.forEach(shopping => {
+                shopping.items.forEach(item => {
+                    if (!productTotals[item.productName]) {
+                        productTotals[item.productName] = {
+                            quantity: 0,
+                            cost: 0
+                        };
+                    }
+                    
+                    // Convert all to kg for comparison
+                    let quantityInKg = item.quantity;
+                    if (item.unit === 'gm') quantityInKg = item.quantity / 1000;
+                    if (item.unit === 'piece') quantityInKg = item.quantity; // Keep as is for pieces
+                    
+                    productTotals[item.productName].quantity += quantityInKg;
+                    productTotals[item.productName].cost += item.price;
+                });
+            });
+            
+            // Convert to array and sort by cost
+            const topProducts = Object.entries(productTotals)
+                .map(([name, data]) => ({
+                    name,
+                    quantity: data.quantity,
+                    cost: data.cost
+                }))
+                .sort((a, b) => b.cost - a.cost)
+                .slice(0, 5);
+            
+            topProductsBody.innerHTML = topProducts.map(product => `
+                <tr>
+                    <td>${product.name}</td>
+                    <td>${product.quantity.toFixed(2)} ${product.quantity >= 1 ? 'কেজি' : 'গ্রাম'}</td>
+                    <td>${product.cost.toFixed(2)} টাকা</td>
+                </tr>
+            `).join('');
+        }
+
+        // Load shopping list
+        function loadShoppingList() {
+            const allShoppingBody = document.getElementById('allShoppingBody');
+            const noAllShoppingData = document.getElementById('noAllShoppingData');
+            const selectedMonth = monthFilter.value;
+            
+            // Filter by month if selected
+            let filteredShopping = shoppingList;
+            if (selectedMonth) {
+                filteredShopping = shoppingList.filter(s => s.date.startsWith(selectedMonth));
+            }
+            
+            if (filteredShopping.length === 0) {
+                allShoppingBody.innerHTML = '';
+                document.getElementById('allShoppingTable').style.display = 'none';
+                noAllShoppingData.style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('allShoppingTable').style.display = 'table';
+            noAllShoppingData.style.display = 'none';
+            
+            allShoppingBody.innerHTML = filteredShopping.map(shopping => `
+                <tr>
+                    <td>${formatDate(shopping.date)}</td>
+                    <td>${shopping.name}</td>
+                    <td>${shopping.items.length}</td>
+                    <td>${shopping.totalCost.toFixed(2)} টাকা</td>
+                    <td class="actions">
+                        <button class="btn btn-outline btn-small view-shopping-btn" data-id="${shopping.id}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-outline btn-small edit-shopping-btn" data-id="${shopping.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-small delete-shopping-btn" data-id="${shopping.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Add event listeners to buttons
+            document.querySelectorAll('.view-shopping-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewShopping(parseInt(this.dataset.id));
+                });
+            });
+            
+            document.querySelectorAll('.edit-shopping-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    editShopping(parseInt(this.dataset.id));
+                });
+            });
+            
+            document.querySelectorAll('.delete-shopping-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    deleteShopping(parseInt(this.dataset.id));
+                });
+            });
+        }
+
+        // View shopping details
+        function viewShopping(id) {
+            const shopping = shoppingList.find(s => s.id === id);
+            if (!shopping) return;
+            
+            const modalBody = document.querySelector('#viewShoppingModal .modal-body');
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: var(--primary); margin-bottom: 10px;">${shopping.name}</h4>
+                    <p><strong>তারিখ:</strong> ${formatDate(shopping.date)}</p>
+                    <p><strong>মোট পণ্য:</strong> ${shopping.items.length} টি</p>
+                    <p><strong>মোট খরচ:</strong> <span style="font-size: 1.2rem; font-weight: bold; color: var(--primary);">${shopping.totalCost.toFixed(2)} টাকা</span></p>
+                </div>
+                
+                <h4 style="margin-bottom: 15px; color: var(--primary-dark);">পণ্য তালিকা</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>পণ্যের নাম</th>
+                                <th>পরিমাণ</th>
+                                <th>দাম</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${shopping.items.map(item => `
+                                <tr>
+                                    <td>${item.productName}</td>
+                                    <td>${item.quantity} ${getUnitName(item.unit)}</td>
+                                    <td>${item.price.toFixed(2)} টাকা</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            viewShoppingModal.classList.add('active');
+        }
+
+        // Edit shopping
+        function editShopping(id) {
+            const shopping = shoppingList.find(s => s.id === id);
+            if (!shopping) return;
+            
+            currentShoppingId = id;
+            const modalBody = document.querySelector('#editShoppingModal .modal-body');
+            
+            modalBody.innerHTML = `
+                <form id="editShoppingForm">
+                    <div class="form-group">
+                        <label class="form-label" for="editShoppingDate">তারিখ</label>
+                        <input type="date" id="editShoppingDate" class="form-control" value="${shopping.date}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="editShoppingName">বাজারের নাম</label>
+                        <input type="text" id="editShoppingName" class="form-control" value="${shopping.name}" required>
+                    </div>
+                    
+                    <h4 style="margin: 20px 0 15px 0; color: var(--primary-dark);">পণ্য তালিকা</h4>
+                    <div id="editProductsContainer">
+                        ${shopping.items.map((item, index) => `
+                            <div class="edit-product-row" style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--light-gray);">
+                                <div style="display: flex; gap: 10px;">
+                                    <div style="flex: 2;">
+                                        <label class="form-label">পণ্যের নাম</label>
+                                        <select class="form-control edit-product-select" required>
+                                            <option value="">পণ্য নির্বাচন করুন</option>
+                                            ${products.map(product => `
+                                                <option value="${product.id}" ${product.name === item.productName ? 'selected' : ''}>${product.name}</option>
+                                            `).join('')}
+                                        </select>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <label class="form-label">পরিমাণ</label>
+                                        <input type="number" class="form-control edit-quantity" value="${item.quantity}" step="0.01" min="0" required>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <label class="form-label">একক</label>
+                                        <select class="form-control edit-unit">
+                                            <option value="kg" ${item.unit === 'kg' ? 'selected' : ''}>কেজি</option>
+                                            <option value="gm" ${item.unit === 'gm' ? 'selected' : ''}>গ্রাম</option>
+                                            <option value="piece" ${item.unit === 'piece' ? 'selected' : ''}>পিস</option>
+                                            <option value="liter" ${item.unit === 'liter' ? 'selected' : ''}>লিটার</option>
+                                        </select>
+                                    </div>
+                                    <div style="flex: 1.5;">
+                                        <label class="form-label">মোট দাম (টাকা)</label>
+                                        <input type="number" class="form-control edit-price" value="${item.price}" min="0" required>
+                                    </div>
+                                    <div style="display: flex; align-items: flex-end;">
+                                        <button type="button" class="btn btn-danger btn-icon remove-edit-product-btn" style="padding: 10px;" ${shopping.items.length === 1 ? 'disabled' : ''}>
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button type="button" class="btn btn-primary" id="addEditProductBtn">
+                            <i class="fas fa-plus"></i> আরও পণ্য যোগ
+                        </button>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="submit" class="btn btn-primary" style="padding: 12px 30px; font-size: 1.1rem;">
+                            <i class="fas fa-save"></i> আপডেট করুন
+                        </button>
+                    </div>
+                </form>
+            `;
+            
+            editShoppingModal.classList.add('active');
+            
+            // Add event listeners for edit form
+            const editForm = document.getElementById('editShoppingForm');
+            const addEditProductBtn = document.getElementById('addEditProductBtn');
+            
+            editForm.addEventListener('submit', updateShopping);
+            
+            addEditProductBtn.addEventListener('click', addEditProductRow);
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-edit-product-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const rows = document.querySelectorAll('.edit-product-row');
+                    if (rows.length > 1) {
+                        this.closest('.edit-product-row').remove();
+                    } else {
+                        alert('অন্তত একটি পণ্য থাকতে হবে!');
+                    }
+                });
+            });
+            
+            // Add event listeners to product selects
+            document.querySelectorAll('.edit-product-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const productId = parseInt(this.value);
+                    if (productId) {
+                        const product = products.find(p => p.id === productId);
+                        if (product) {
+                            const unitSelect = this.closest('.edit-product-row').querySelector('.edit-unit');
+                            unitSelect.value = product.unit;
+                        }
+                    }
+                });
+            });
+        }
+
+        // Add product row to edit form
+        function addEditProductRow() {
+            const container = document.getElementById('editProductsContainer');
+            const row = document.createElement('div');
+            row.className = 'edit-product-row';
+            row.style.marginBottom = '15px';
+            row.style.paddingBottom = '15px';
+            row.style.borderBottom = '1px solid var(--light-gray)';
+            
+            row.innerHTML = `
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex: 2;">
+                        <label class="form-label">পণ্যের নাম</label>
+                        <select class="form-control edit-product-select" required>
+                            <option value="">পণ্য নির্বাচন করুন</option>
+                            ${products.map(product => `<option value="${product.id}">${product.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="form-label">পরিমাণ</label>
+                        <input type="number" class="form-control edit-quantity" step="0.01" min="0" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="form-label">একক</label>
+                        <select class="form-control edit-unit">
+                            <option value="kg">কেজি</option>
+                            <option value="gm">গ্রাম</option>
+                            <option value="piece">পিস</option>
+                            <option value="liter">লিটার</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1.5;">
+                        <label class="form-label">মোট দাম (টাকা)</label>
+                        <input type="number" class="form-control edit-price" min="0" required>
+                    </div>
+                    <div style="display: flex; align-items: flex-end;">
+                        <button type="button" class="btn btn-danger btn-icon remove-edit-product-btn" style="padding: 10px;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(row);
+            
+            // Add event listener to remove button
+            const removeBtn = row.querySelector('.remove-edit-product-btn');
+            removeBtn.addEventListener('click', function() {
+                const rows = document.querySelectorAll('.edit-product-row');
+                if (rows.length > 1) {
+                    row.remove();
+                } else {
+                    alert('অন্তত একটি পণ্য থাকতে হবে!');
+                }
+            });
+            
+            // Add event listener to product select
+            const productSelect = row.querySelector('.edit-product-select');
+            const unitSelect = row.querySelector('.edit-unit');
+            
+            productSelect.addEventListener('change', function() {
+                const productId = parseInt(this.value);
+                if (productId) {
+                    const product = products.find(p => p.id === productId);
+                    if (product) {
+                        unitSelect.value = product.unit;
+                    }
+                }
+            });
+        }
+
+        // Update shopping
+        function updateShopping(e) {
+            e.preventDefault();
+            
+            // Get shopping data
+            const date = document.getElementById('editShoppingDate').value;
+            const name = document.getElementById('editShoppingName').value;
+            
+            // Get product rows
+            const productRows = document.querySelectorAll('.edit-product-row');
+            const items = [];
+            let totalCost = 0;
+            
+            for (const row of productRows) {
+                const productSelect = row.querySelector('.edit-product-select');
+                const quantityInput = row.querySelector('.edit-quantity');
+                const unitSelect = row.querySelector('.edit-unit');
+                const priceInput = row.querySelector('.edit-price');
+                
+                const productId = parseInt(productSelect.value);
+                const product = products.find(p => p.id === productId);
+                
+                if (!product) {
+                    alert('দয়া করে সব পণ্য সঠিকভাবে নির্বাচন করুন!');
+                    return;
+                }
+                
+                const quantity = parseFloat(quantityInput.value);
+                const unit = unitSelect.value;
+                const price = parseFloat(priceInput.value);
+                
+                if (!quantity || !price) {
+                    alert('দয়া করে সব পণ্যের পরিমাণ ও দাম সঠিকভাবে লিখুন!');
+                    return;
+                }
+                
+                items.push({
+                    productId,
+                    productName: product.name,
+                    quantity,
+                    unit,
+                    price
+                });
+                
+                totalCost += price;
+            }
+            
+            // Find shopping index
+            const shoppingIndex = shoppingList.findIndex(s => s.id === currentShoppingId);
+            if (shoppingIndex === -1) return;
+            
+            // Update shopping
+            shoppingList[shoppingIndex] = {
+                ...shoppingList[shoppingIndex],
+                date,
+                name,
+                items,
+                totalCost
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('marketShoppingList', JSON.stringify(shoppingList));
+            
+            // Close modal
+            editShoppingModal.classList.remove('active');
+            
+            // Show success message
+            alert('বাজার সফলভাবে আপডেট করা হয়েছে!');
+            
+            // Update dashboard and shopping list
+            loadDashboardData();
+            loadShoppingList();
+        }
+
+        // Delete shopping
+        function deleteShopping(id) {
+            if (confirm('আপনি কি এই বাজারটি মুছতে চান?')) {
+                // Remove from shopping list
+                shoppingList = shoppingList.filter(s => s.id !== id);
+                
+                // Save to localStorage
+                localStorage.setItem('marketShoppingList', JSON.stringify(shoppingList));
+                
+                // Update dashboard and shopping list
+                loadDashboardData();
+                loadShoppingList();
+                
+                // Show success message
+                alert('বাজার মুছে ফেলা হয়েছে!');
+            }
+        }
+
+        // Generate report
+        function generateReport() {
+            const selectedMonth = reportMonth.value;
+            
+            if (!selectedMonth) {
+                alert('দয়া করে একটি মাস নির্বাচন করুন!');
+                return;
+            }
+            
+            // Filter shopping by selected month
+            const monthShopping = shoppingList.filter(s => s.date.startsWith(selectedMonth));
+            
+            if (monthShopping.length === 0) {
+                selectMonthPrompt.style.display = 'none';
+                reportContent.style.display = 'block';
+                document.getElementById('noReportData').style.display = 'block';
+                document.getElementById('reportProductsTable').style.display = 'none';
+                
+                document.getElementById('reportTotalShopping').textContent = '০';
+                document.getElementById('reportTotalCost').textContent = '০ টাকা';
+                document.getElementById('reportAvgDailyCost').textContent = '০ টাকা';
+                
+                return;
+            }
+            
+            selectMonthPrompt.style.display = 'none';
+            reportContent.style.display = 'block';
+            document.getElementById('noReportData').style.display = 'none';
+            document.getElementById('reportProductsTable').style.display = 'table';
+            
+            // Calculate report data
+            const totalShopping = monthShopping.length;
+            const totalCost = monthShopping.reduce((sum, s) => sum + s.totalCost, 0);
+            
+            // Get days in month
+            const [year, month] = selectedMonth.split('-');
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const avgDailyCost = totalCost / daysInMonth;
+            
+            // Update report summary
+            document.getElementById('reportTotalShopping').textContent = totalShopping;
+            document.getElementById('reportTotalCost').textContent = `${totalCost.toFixed(2)} টাকা`;
+            document.getElementById('reportAvgDailyCost').textContent = `${avgDailyCost.toFixed(2)} টাকা`;
+            
+            // Calculate product totals for the month
+            const productTotals = {};
+            
+            monthShopping.forEach(shopping => {
+                shopping.items.forEach(item => {
+                    if (!productTotals[item.productName]) {
+                        productTotals[item.productName] = {
+                            quantity: 0,
+                            cost: 0,
+                            unit: item.unit
+                        };
+                    }
+                    
+                    // Convert all to kg for comparison
+                    let quantityInKg = item.quantity;
+                    if (item.unit === 'gm') quantityInKg = item.quantity / 1000;
+                    if (item.unit === 'piece' || item.unit === 'liter') quantityInKg = item.quantity; // Keep as is
+                    
+                    productTotals[item.productName].quantity += quantityInKg;
+                    productTotals[item.productName].cost += item.price;
+                    productTotals[item.productName].unit = item.unit;
+                });
+            });
+            
+            // Convert to array and sort by cost
+            const reportProducts = Object.entries(productTotals)
+                .map(([name, data]) => ({
+                    name,
+                    quantity: data.quantity,
+                    cost: data.cost,
+                    unit: data.unit,
+                    avgPrice: data.cost / data.quantity
+                }))
+                .sort((a, b) => b.cost - a.cost);
+            
+            // Update report products table
+            const reportProductsBody = document.getElementById('reportProductsBody');
+            reportProductsBody.innerHTML = reportProducts.map(product => `
+                <tr>
+                    <td>${product.name}</td>
+                    <td>${product.quantity.toFixed(2)} ${getUnitName(product.unit)}</td>
+                    <td>${product.cost.toFixed(2)} টাকা</td>
+                    <td>${isNaN(product.avgPrice) ? '০' : product.avgPrice.toFixed(2)} টাকা</td>
+                </tr>
+            `).join('');
+        }
+
+        // Utility functions
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('bn-BD', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function getUnitName(unit) {
+            switch(unit) {
+                case 'kg': return 'কেজি';
+                case 'gm': return 'গ্রাম';
+                case 'piece': return 'পিস';
+                case 'liter': return 'লিটার';
+                default: return unit;
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
         }
     </script>
 </body>
-</html>
+</html> eai ato boro code ear app ar code dicilane
